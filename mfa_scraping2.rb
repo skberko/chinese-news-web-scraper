@@ -26,7 +26,7 @@ press_conf_urls.each do |press_conf_url|
   press_conf_hashes << press_conf
 
   # include print statement so progress is reflected in terminal
-  p press_conf[:date]
+  p "#{press_conf[:date]} scraped and copied to mfa_press_confs.csv"
 end
 
 CSV.open("mfa_press_confs.csv", "ab") do |csv|

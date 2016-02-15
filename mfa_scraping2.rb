@@ -23,17 +23,19 @@ press_conf_urls.each do |press_conf_url|
   press_conf[:body] = doc.at_css('#News_Body_Txt_A').text
   press_conf[:url] = press_conf_url
 
-  press_conf_hashes << press_conf
+  CSV.open("mfa_press_confs.csv", "ab") do |csv|
+    csv << press_conf.values
+  end
 
   # include print statement so progress is reflected in terminal
   p "#{press_conf[:date]} scraped and copied to mfa_press_confs.csv"
 end
 
-CSV.open("mfa_press_confs.csv", "ab") do |csv|
-  press_conf_hashes.each do |hash|
-    csv << hash.values
-  end
-end
+# CSV.open("mfa_press_confs.csv", "ab") do |csv|
+#   press_conf_hashes.each do |hash|
+#     csv << hash.values
+#   end
+# end
 
 # http://stackoverflow.com/questions/17325792/array-of-hashes-to-csv-file
 # https://github.com/sparklemotion/nokogiri/wiki/From-jQuery

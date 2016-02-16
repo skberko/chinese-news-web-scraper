@@ -31,12 +31,6 @@ press_conf_urls.each do |press_conf_url|
   p "#{press_conf[:date]} scraped and copied to mfa_press_confs.csv"
 end
 
-# CSV.open("mfa_press_confs.csv", "ab") do |csv|
-#   press_conf_hashes.each do |hash|
-#     csv << hash.values
-#   end
-# end
-
 # http://stackoverflow.com/questions/17325792/array-of-hashes-to-csv-file
 # https://github.com/sparklemotion/nokogiri/wiki/From-jQuery
 # http://stackoverflow.com/questions/12718872/how-do-i-create-a-new-csv-file-in-ruby

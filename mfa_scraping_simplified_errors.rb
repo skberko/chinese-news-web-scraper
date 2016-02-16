@@ -55,8 +55,8 @@ while keepgoing
         keepgoing = false
         puts "\nHit a 404 (Not Found) error. Either there was a URL issue, or scraping is complete!"
       else
-        puts "\nSleeping for 60 sec to deal with #{error.message}"
-        sleep 60
+        puts "\nSleeping for 120 sec to deal with #{error.message}"
+        sleep 120
       end
     end
   end

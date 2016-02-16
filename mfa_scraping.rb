@@ -34,19 +34,35 @@ while keepgoing
     end
 
     # include print statement so progress is reflected in terminal
-    p "#{press_conf[:date]} scraped and appended"
+    puts "#{press_conf[:date]} scraped and appended"
   end
 
   begin
     index_idx += 1
     index_url = 'http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/default_' + index_idx.to_s + '.shtml'
     index_doc = Nokogiri::HTML(open(index_url))
-  rescue
-    keepgoing = false
+  rescue OpenURI::HTTPError => error
+    if error.message.to_i == 502
+      puts "\nHit a 502 (Bad Gateway) error. Will retry scraping this URL in 90 seconds."
+      sleep 90
+      begin
+        index_doc = Nokogiri::HTML(open(index_url))
+      rescue OpenURI::HTTPError => error2
+        puts "\nAfter an initial 502 error, slept 90 seconds and retried same URL.\nHowever, there was another error.\nThis time, it was '#{error2.message}'"
+      end
+    elsif error.message.to_i == 403
+      p "\nHit a 403 (Forbidden) error. Possibly banned from the site now."
+    elsif error.message.to_i == 404
+      keepgoing = false
+      p "\nHit a 404 (Not Found) error - either there was a URL issue, or scraping is complete!"
+    else
+      keepgoing = false
+      p "\nThere was an unexpected error: '#{error.message}'. Uh oh!"
+    end
   end
 end
 
-p "\nAll press conferences scraped and appended to mfa_press_confs.csv"
+# p "\nAll press conferences scraped and appended to mfa_press_confs.csv"
 
 
 
@@ -58,3 +74,4 @@ p "\nAll press conferences scraped and appended to mfa_press_confs.csv"
 # http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/t1338806.shtml
 # http://www.nokogiri.org/tutorials/parsing_an_html_xml_document.html
 # http://stackoverflow.com/questions/3682359/what-are-the-ruby-file-open-modes-and-options
+# http://mikeferrier.com/2012/05/19/rescuing-multiple-exception-types-in-ruby-and-binding-to-local-variable/

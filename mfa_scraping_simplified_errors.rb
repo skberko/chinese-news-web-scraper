@@ -40,11 +40,8 @@ while keepgoing
       rescue OpenURI::HTTPError, ArgumentError, NoMethodError => error
         if error.message.to_i == 404
           try_next_press_conf = true
-          # keepgoing = false
           puts "\nSingle Conference Page:\nHit error #{error.message}.\nThe press conference at #{press_conf_url} does not exist!"
         elsif error.message.to_i == 403
-          # try_next_press_conf = true
-          # keepgoing = false
           breakout_early_for_403 = true
           puts "\nSingle Conference Page:\n***Hit error #{error.message}, so ending scraping to avoid further issues.***"
         else
@@ -78,7 +75,6 @@ while keepgoing
           keepgoing = false
           puts "\nNew Index Page:\nHit error #{error.message}. Either there was a URL issue, or scraping is complete!"
         elsif error.message.to_i == 403
-          # no_err_besides_404 = true
           keepgoing = false
           breakout_early_for_403 = true
           puts "\nNew Index Page:\nHit error #{error.message}, so ending scraping to avoid further issues."

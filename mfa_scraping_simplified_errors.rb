@@ -38,8 +38,7 @@ while keepgoing
       csv << press_conf.values
     end
 
-    # include print statement so progress is reflected in terminal
-    puts "#{press_conf[:date]} scraped and appended"
+    puts "#{press_conf[:date]} scraped and appended to csv"
   end
 
   index_idx += 1

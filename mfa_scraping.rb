@@ -44,6 +44,7 @@ while keepgoing
     index_idx += 1
     index_url = 'http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/default_' + index_idx.to_s + '.shtml'
     index_doc = Nokogiri::HTML(open(index_url))
+    puts "\nNow scraping links from index page #{index_idx}."
   rescue OpenURI::HTTPError => error
     if error.message.to_i == 502
       puts "\nHit a 502 (Bad Gateway) error. Will retry scraping this URL in 120 seconds, at #{Time.now}."
@@ -63,7 +64,10 @@ while keepgoing
       keepgoing = false
       puts "\nThere was an unexpected error: '#{error.message}'. Uh oh!"
     end
-  end
+
+    # need to account for 504 errors, apparently: 
+    # /Users/skberkowitz/.rbenv/versions/2.1.2/lib/ruby/2.1.0/open-uri.rb:353:in `open_http': 504 Gateway Time-out (OpenURI::HTTPError)
+    end
 end
 
 puts "\nScraping took #{(Time.now - start_time).to_i} seconds."

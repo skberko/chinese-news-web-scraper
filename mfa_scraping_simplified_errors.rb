@@ -18,6 +18,7 @@ index_url = 'http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/'
 index_doc = Nokogiri::HTML(open(index_url))
 
 while keepgoing
+  puts "\nNow scraping links from index page #{index_idx}."
   curr_index_press_conf_urls = []
   index_doc.css('.rebox_news a').each do |press_conf_a_tag|
     url_ending = press_conf_a_tag[:href].split('')[2..-1].join
@@ -47,7 +48,6 @@ while keepgoing
   until no_errors_besides_404
     begin
       index_doc = Nokogiri::HTML(open(index_url))
-      puts "\nNow scraping links from index page #{index_idx}."
       no_errors_besides_404 = true
     rescue OpenURI::HTTPError => error
       if error.message.to_i == 404

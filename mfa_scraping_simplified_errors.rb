@@ -5,7 +5,6 @@ require 'csv'
 start_time = Time.now
 puts "\nStarted scraping at #{Time.now}"
 
-# creates csv doc and adds four relevant column names:
 CSV.open("mfa_press_confs_simplified_errors.csv", "wb") do |csv|
   column_titles = %w(title date body url)
   csv << column_titles

@@ -1,3 +1,5 @@
+start_time = Time.now
+
 require 'nokogiri'
 require 'open-uri'
 require 'csv'
@@ -49,6 +51,7 @@ while keepgoing
         index_doc = Nokogiri::HTML(open(index_url))
       rescue OpenURI::HTTPError => error2
         puts "\nAfter an initial 502 error, slept 90 seconds and retried same URL.\nHowever, there was another error.\nThis time, it was '#{error2.message}'"
+        keepgoing = false
       end
     elsif error.message.to_i == 403
       p "\nHit a 403 (Forbidden) error. Possibly banned from the site now."
@@ -61,6 +64,8 @@ while keepgoing
     end
   end
 end
+
+puts "\nScraping took #{(Time.now - start_time).to_i} seconds."
 
 # p "\nAll press conferences scraped and appended to mfa_press_confs.csv"
 

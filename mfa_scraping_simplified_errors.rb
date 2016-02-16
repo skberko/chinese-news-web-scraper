@@ -42,16 +42,20 @@ while keepgoing
 
   index_idx += 1
   index_url = 'http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/default_' + index_idx.to_s + '.shtml'
-  no_errors_besides_404 = false
-  until no_errors_besides_404
+  no_err_besides_404 = false
+  until no_err_besides_404_or_403
     begin
       index_doc = Nokogiri::HTML(open(index_url))
-      no_errors_besides_404 = true
+      no_err_besides_404_or_403 = true
     rescue OpenURI::HTTPError => error
       if error.message.to_i == 404
-        no_errors_besides_404 = true
+        no_err_besides_404_or_403 = true
         keepgoing = false
         puts "\nHit a 404 (Not Found) error. Either there was a URL issue, or scraping is complete!"
+      elsif error.message.to_i == 403
+        no_err_besides_404_or_403 = true
+        keepgoing = false
+        puts "\nHit error #{error.message}, so ending scraping to avoid further issues."
       else
         puts "\nSleeping for 120 sec to deal with #{error.message}"
         sleep 120

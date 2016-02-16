@@ -1,8 +1,9 @@
-start_time = Time.now
-
 require 'nokogiri'
 require 'open-uri'
 require 'csv'
+
+start_time = Time.now
+puts "\nStarted scraping at #{Time.now}"
 
 # creates csv doc and adds four relevant column names:
 CSV.open("mfa_press_confs.csv", "wb") do |csv|
@@ -45,22 +46,22 @@ while keepgoing
     index_doc = Nokogiri::HTML(open(index_url))
   rescue OpenURI::HTTPError => error
     if error.message.to_i == 502
-      puts "\nHit a 502 (Bad Gateway) error. Will retry scraping this URL in 90 seconds."
-      sleep 90
+      puts "\nHit a 502 (Bad Gateway) error. Will retry scraping this URL in 120 seconds, at #{Time.now}."
+      sleep 120
       begin
         index_doc = Nokogiri::HTML(open(index_url))
       rescue OpenURI::HTTPError => error2
-        puts "\nAfter an initial 502 error, slept 90 seconds and retried same URL.\nHowever, there was another error.\nThis time, it was '#{error2.message}'"
+        puts "\nAfter an initial 502 error, slept 120 seconds and retried same URL.\nHowever, there was another error.\nThis time, it was '#{error2.message}'"
         keepgoing = false
       end
     elsif error.message.to_i == 403
-      p "\nHit a 403 (Forbidden) error. Possibly banned from the site now."
+      puts "\nHit a 403 (Forbidden) error. Possibly banned from the site now."
     elsif error.message.to_i == 404
       keepgoing = false
-      p "\nHit a 404 (Not Found) error - either there was a URL issue, or scraping is complete!"
+      puts "\nHit a 404 (Not Found) error - either there was a URL issue, or scraping is complete!"
     else
       keepgoing = false
-      p "\nThere was an unexpected error: '#{error.message}'. Uh oh!"
+      puts "\nThere was an unexpected error: '#{error.message}'. Uh oh!"
     end
   end
 end

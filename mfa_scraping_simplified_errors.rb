@@ -52,12 +52,13 @@ while keepgoing
       if error.message.to_i == 404
         no_errors_besides_404 = true
         keepgoing = false
-        puts "\nHit a 404 (Not Found) error - either there was a URL issue, or scraping is complete!"
+        puts "\nHit a 404 (Not Found) error. Either there was a URL issue, or scraping is complete!"
       else
         puts "\nSleeping for 60 sec to deal with #{error.message}"
         sleep 60
       end
     end
+  end
 end
 
 puts "\nScraping took #{(Time.now - start_time).to_i} seconds."

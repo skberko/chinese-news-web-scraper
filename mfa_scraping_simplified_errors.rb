@@ -15,6 +15,7 @@ index_idx = 0
 base_conf_url = 'http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/'
 index_url = 'http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/'
 index_doc = Nokogiri::HTML(open(index_url))
+breakout_early_for_403 = false
 
 while keepgoing
   puts "\nNow scraping links from index page #{index_idx}."
@@ -27,44 +28,78 @@ while keepgoing
   curr_index_press_conf_urls.each do |press_conf_url|
     press_conf = {}
 
-    press_conf_doc = Nokogiri::HTML(open(press_conf_url))
-    press_conf[:title] = press_conf_doc.at_css('#News_Body_Title').text
-    press_conf[:date] = press_conf_doc.at_css('#News_Body_Time').text
-    press_conf[:body] = press_conf_doc.at_css('#News_Body_Txt_A').text
-    press_conf[:url] = press_conf_url
-
-    CSV.open("mfa_press_confs_simplified_errors.csv", "ab") do |csv|
-      csv << press_conf.values
-    end
-
-    puts "#{press_conf[:date]} scraped and appended to csv"
-  end
-
-  index_idx += 1
-  index_url = 'http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/default_' + index_idx.to_s + '.shtml'
-  no_err_besides_404 = false
-  until no_err_besides_404_or_403
-    begin
-      index_doc = Nokogiri::HTML(open(index_url))
-      no_err_besides_404_or_403 = true
-    rescue OpenURI::HTTPError => error
-      if error.message.to_i == 404
-        no_err_besides_404_or_403 = true
-        keepgoing = false
-        puts "\nHit a 404 (Not Found) error. Either there was a URL issue, or scraping is complete!"
-      elsif error.message.to_i == 403
-        no_err_besides_404_or_403 = true
-        keepgoing = false
-        puts "\nHit error #{error.message}, so ending scraping to avoid further issues."
-      else
-        puts "\nSleeping for 120 sec to deal with #{error.message}"
-        sleep 120
+    try_next_press_conf = false
+    until try_next_press_conf
+      begin
+        press_conf_doc = Nokogiri::HTML(open(press_conf_url))
+        press_conf[:title] = press_conf_doc.at_css('#News_Body_Title').text
+        press_conf[:date] = press_conf_doc.at_css('#News_Body_Time').text
+        press_conf[:body] = press_conf_doc.at_css('#News_Body_Txt_A').text
+        press_conf[:url] = press_conf_url
+        try_next_press_conf = true
+      rescue OpenURI::HTTPError, ArgumentError => error
+        if error.message.to_i == 404
+          try_next_press_conf = true
+          # keepgoing = false
+          puts "\nSingle Conference Page:\nHit error #{error.message}.\nThe press conference at #{press_conf_url} does not exist!"
+        elsif error.message.to_i == 403
+          # try_next_press_conf = true
+          # keepgoing = false
+          breakout_early_for_403 = true
+          puts "\nSingle Conference Page:\n***Hit error #{error.message}, so ending scraping to avoid further issues.***"
+        else
+          puts "Single Conference Page:\nSleeping for 120 sec to deal with #{error.message}"
+          sleep 120
+        end
       end
+      break if breakout_early_for_403
+    end
+
+    unless breakout_early_for_403
+      CSV.open("mfa_press_confs_simplified_errors.csv", "ab") do |csv|
+        csv << press_conf.values
+      end
+
+      puts "#{press_conf[:date]} scraped and appended to csv"
     end
   end
+
+  unless breakout_early_for_403
+    index_idx += 1
+    index_url = 'http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/default_' + index_idx.to_s + '.shtml'
+    no_err_besides_404 = false
+    until no_err_besides_404
+      begin
+        index_doc = Nokogiri::HTML(open(index_url))
+        no_err_besides_404 = true
+      rescue OpenURI::HTTPError, ArgumentError => error
+        if error.message.to_i == 404
+          no_err_besides_404 = true
+          keepgoing = false
+          puts "\nNew Index Page:\nHit error #{error.message}. Either there was a URL issue, or scraping is complete!"
+        elsif error.message.to_i == 403
+          # no_err_besides_404 = true
+          keepgoing = false
+          breakout_early_for_403 = true
+          puts "\nNew Index Page:\nHit error #{error.message}, so ending scraping to avoid further issues."
+        else
+          puts "\nNew Index Page:\nSleeping for 120 sec to deal with #{error.message}"
+          sleep 120
+        end
+      end
+      break if breakout_early_for_403
+    end
+  end
+  break if breakout_early_for_403
 end
 
-puts "\nScraping took #{(Time.now - start_time).to_i} seconds."
+if breakout_early_for_403
+  puts "\n**WARNING: BROKE OUT OF THE SCRIPT EARLY AFTER ENCOUNTERING A 403 ERROR**"
+  puts "TIME UNTIL 403 ERROR WAS #{(Time.now - start_time).to_i} SECONDS."
+else
+  puts "\nScraping took #{(Time.now - start_time).to_i} seconds."
+end
+
 
 
 # http://stackoverflow.com/questions/17325792/array-of-hashes-to-csv-file

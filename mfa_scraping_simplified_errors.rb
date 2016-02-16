@@ -41,11 +41,11 @@ while keepgoing
     puts "#{press_conf[:date]} scraped and appended"
   end
 
-  no_errors_besides_404 = false
   index_idx += 1
+  index_url = 'http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/default_' + index_idx.to_s + '.shtml'
+  no_errors_besides_404 = false
   until no_errors_besides_404
     begin
-      index_url = 'http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/default_' + index_idx.to_s + '.shtml'
       index_doc = Nokogiri::HTML(open(index_url))
       puts "\nNow scraping links from index page #{index_idx}."
     rescue OpenURI::HTTPError => error

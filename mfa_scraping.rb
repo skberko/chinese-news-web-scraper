@@ -9,9 +9,9 @@ CSV.open("mfa_press_confs.csv", "wb") do |csv|
 end
 
 keepgoing = true
-index_idx = 3
+index_idx = 0
 base_conf_url = 'http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/'
-index_url = 'http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/default_3.shtml'
+index_url = 'http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/'
 index_doc = Nokogiri::HTML(open(index_url))
 
 while keepgoing

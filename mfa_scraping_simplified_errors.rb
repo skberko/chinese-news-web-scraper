@@ -48,6 +48,7 @@ while keepgoing
     begin
       index_doc = Nokogiri::HTML(open(index_url))
       puts "\nNow scraping links from index page #{index_idx}."
+      no_errors_besides_404 = true
     rescue OpenURI::HTTPError => error
       if error.message.to_i == 404
         no_errors_besides_404 = true

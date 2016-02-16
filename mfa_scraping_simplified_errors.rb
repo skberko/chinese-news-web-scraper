@@ -37,7 +37,7 @@ while keepgoing
         press_conf[:body] = press_conf_doc.at_css('#News_Body_Txt_A').text
         press_conf[:url] = press_conf_url
         try_next_press_conf = true
-      rescue OpenURI::HTTPError, ArgumentError => error
+      rescue OpenURI::HTTPError, ArgumentError, NoMethodError => error
         if error.message.to_i == 404
           try_next_press_conf = true
           # keepgoing = false
@@ -72,7 +72,7 @@ while keepgoing
       begin
         index_doc = Nokogiri::HTML(open(index_url))
         no_err_besides_404 = true
-      rescue OpenURI::HTTPError, ArgumentError => error
+      rescue OpenURI::HTTPError, ArgumentError, NoMethodError => error
         if error.message.to_i == 404
           no_err_besides_404 = true
           keepgoing = false

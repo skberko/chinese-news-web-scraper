@@ -41,21 +41,23 @@ while keepgoing
     puts "#{press_conf[:date]} scraped and appended"
   end
 
-  begin
-    index_idx += 1
-    index_url = 'http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/default_' + index_idx.to_s + '.shtml'
-    index_doc = Nokogiri::HTML(open(index_url))
-    puts "\nNow scraping links from index page #{index_idx}."
-  rescue OpenURI::HTTPError => error
-    if error.message.to_i == 404
-      keepgoing = false
-      puts "\nHit a 404 (Not Found) error - either there was a URL issue, or scraping is complete!"
-    else
-      puts "\nSleeping for 60 sec to deal with #{error.message}"
-      sleep 60
+  no_errors = false
+  index_idx += 1
+  until no_errors
+    begin
+      index_url = 'http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/default_' + index_idx.to_s + '.shtml'
       index_doc = Nokogiri::HTML(open(index_url))
+      puts "\nNow scraping links from index page #{index_idx}."
+    rescue OpenURI::HTTPError => error
+      if error.message.to_i == 404
+        no_errors = true
+        keepgoing = false
+        puts "\nHit a 404 (Not Found) error - either there was a URL issue, or scraping is complete!"
+      else
+        puts "\nSleeping for 60 sec to deal with #{error.message}"
+        sleep 60
+      end
     end
-  end
 end
 
 puts "\nScraping took #{(Time.now - start_time).to_i} seconds."

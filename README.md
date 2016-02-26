@@ -36,6 +36,7 @@ To see an example of an actual transcript (i.e. the data being written to the CS
 # Results
 
 - To see the results of a full scrape run on Feb 22, 2016, see the 'mfa\_press\_confs.csv' file in this repo
+- Be aware that if you run the script yourself, you will overwrite this .csv file!
 - To see an example of the console log updates provided live while the script is running (as well as some examples of some server errors being handled in realtime), see the file 'success_scrape\_record.rtf' in this repo
 
 # Resources Consulted

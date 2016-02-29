@@ -95,15 +95,3 @@ if breakout_early_for_403
 else
   puts "\nScraping took #{(Time.now - start_time).to_i} seconds."
 end
-
-
-
-# http://stackoverflow.com/questions/17325792/array-of-hashes-to-csv-file
-# https://github.com/sparklemotion/nokogiri/wiki/From-jQuery
-# http://stackoverflow.com/questions/12718872/how-do-i-create-a-new-csv-file-in-ruby
-# http://railscasts.com/episodes/190-screen-scraping-with-nokogiri?autoplay=true
-# http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/
-# http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/t1338806.shtml
-# http://www.nokogiri.org/tutorials/parsing_an_html_xml_document.html
-# http://stackoverflow.com/questions/3682359/what-are-the-ruby-file-open-modes-and-options
-# http://mikeferrier.com/2012/05/19/rescuing-multiple-exception-types-in-ruby-and-binding-to-local-variable/

@@ -12,8 +12,8 @@ end
 
 keep_going = true
 index_idx = 0
-base_conf_url = 'http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/'
-index_url = 'http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/'
+base_conf_url = 'https://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/'
+index_url = 'https://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/'
 index_doc = Nokogiri::HTML(open(index_url))
 breakout_early_for_403 = false
 
@@ -63,7 +63,7 @@ while keep_going
 
   unless breakout_early_for_403
     index_idx += 1
-    index_url = 'http://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/default_' + index_idx.to_s + '.shtml'
+    index_url = 'https://www.fmprc.gov.cn/web/fyrbt_673021/jzhsl_673025/default_' + index_idx.to_s + '.shtml'
     no_err_besides_404 = false
     until no_err_besides_404
       begin

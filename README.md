@@ -1,4 +1,4 @@
-# Chinese News Web Scraper
+# MFA Press Conference Web Scraper
 
 In a previous life, I dabbled in China-focused journalism (see [here](http://foreignpolicy.com/2015/01/05/its-official-the-man-who-ruled-china-has-all-but-vanished/) for an example). My research frequently involved combing through thousands of official press documents in the original Mandarin Chinese to find evidence of shifts in government policy. Naturally, the more data available to me, the more inefficient it became to do this manually.
 
@@ -29,15 +29,14 @@ To see an example of an actual transcript (i.e. the data being written to the CS
 # How to run this script
 
 - Clone this repo.
-- Make sure you have installed the [Nokogiri](http://www.nokogiri.org/) Ruby gem on your machine (to do this, run 'gem install nokogiri').
-- Navigate to the cloned repo, then run 'ruby mfa_scraping.rb'.
+- Make sure you have installed the [Nokogiri](http://www.nokogiri.org/) Ruby gem on your machine (to do this, run `gem install nokogiri`).
+- Navigate to the cloned repo, then run `ruby mfa_scraping.rb`.
 - The script should take less than half an hour to run, though YMMV depending on network speed.
 
 # Results
 
-- To see the results of a full scrape run on Feb 22, 2016, see the 'mfa\_press\_confs.csv' file in this repo
-- Be aware that if you run the script yourself, you will overwrite this .csv file!
-- To see an example of the console log updates provided live while the script is running (as well as some examples of some server errors being handled in realtime), see the file 'success_scrape\_record.rtf' in this repo
+- Results of the script will be printed out to the  the `mfa_press_confs.csv` file in this repo
+- Be aware that every time you rerun the script, you will overwrite this .csv file!
 
 # Resources Consulted
 
